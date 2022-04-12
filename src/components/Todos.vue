@@ -14,7 +14,7 @@
             <ul class="todo-list">
                 <li class="todo" v-for="(todo, index) in filteredTodos" :key="index" :class="{completed: todo.completed, editing: todo === editing}">
                     <div class="view">
-                        <input type="checkbox" v-model="todo.completed" class="toggle" :disabled="verification(todo)">
+                        <input type="checkbox" v-model="todo.completed" class="toggle" :disabled="verification(todo.name)">
                         <label @dblclick="editTodo(todo)" >{{ todo.name }}</label>
                         <button class="destroy" @click.prevent="deleteTodo(todo)"></button>
                         <p v-show="todo.inProgress">encour</p>
@@ -96,7 +96,8 @@ export default {
       this.doneEdit()
     },
 
-    verification (todo) {
+    verification (name) {
+      const todo = this.todos.find(todo => todo.name === name)
       return !todo.inProgress
     }
   },
