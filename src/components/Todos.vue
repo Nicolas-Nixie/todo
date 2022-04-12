@@ -15,7 +15,8 @@
                     <div class="view">
                         <input type="checkbox" v-model="todo.completed" class="toggle">
                         <label @dblclick="editing(todo)" >{{ todo.name }}</label>
-                        <p v-show="todo.completed"></p>
+                        <input type="checkbox" v-model="todo.inProgress">
+                        <p v-show="todo.inProgress">encour</p>
                         <button class="destroy" @click.prevent="deletTodo(todo)"></button>
                     </div>
                     <input type="text" class="edit" v-model="todo.name" @keyup.enter="doneEdit" @blur="doneEdit" @keyup.esc="cancelEdit" v-focus="todo === editing">
@@ -49,8 +50,7 @@ export default {
       newTodo: '',
       filter: 'all',
       editing: null,
-      oldTodo: '',
-      pending: ''
+      oldTodo: ''
     }
   },
 
@@ -116,6 +116,13 @@ export default {
         return todo.completed
       })
       return test.length
+    },
+
+    inProgress () {
+      const pending = this.todos.folter(function (todo) {
+        return todo.inProgress
+      })
+      return pending.length
     },
 
     hasTodos () {
