@@ -4,6 +4,7 @@
 
             <h1>Todos</h1>
             <span class="todo-count"><strong>{{ completed }}</strong> tâches faites</span>
+            <span class="todo-count"><strong>{{ inProgress }}</strong> tâches en cours</span>
             <input type="test" class="new-todo"  placeholder="Ajouter une tache" v-model="newTodo" @keyup.enter="addTodo">
 
         </header>
@@ -15,11 +16,11 @@
                     <div class="view">
                         <input type="checkbox" v-model="todo.completed" class="toggle">
                         <label @dblclick="editing(todo)" >{{ todo.name }}</label>
-                        <input type="checkbox" v-model="todo.inProgress">
-                        <p v-show="todo.inProgress">encour</p>
                         <button class="destroy" @click.prevent="deletTodo(todo)"></button>
+                        <p v-show="todo.inProgress">encour</p>
                     </div>
                     <input type="text" class="edit" v-model="todo.name" @keyup.enter="doneEdit" @blur="doneEdit" @keyup.esc="cancelEdit" v-focus="todo === editing">
+                <input type="checkbox" v-model="todo.inProgress">
                 </li>
             </ul>
         </div>
@@ -118,13 +119,6 @@ export default {
       return test.length
     },
 
-    inProgress () {
-      const pending = this.todos.folter(function (todo) {
-        return todo.inProgress
-      })
-      return pending.length
-    },
-
     hasTodos () {
       return this.todos.length > 0
     },
@@ -138,6 +132,13 @@ export default {
 
       return this.todos
     }
+  },
+
+  inProgress () {
+    const pending = this.todos.filter(function (todo) {
+      return todo.inProgress
+    })
+    return pending.length
   },
 
   directives: {
