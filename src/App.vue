@@ -16,7 +16,8 @@ export default {
     return {
       todos: [{
         name: 'Demo',
-        completed: true
+        completed: false,
+        inProgress: true
       }]
     }
   },
@@ -25,7 +26,8 @@ export default {
     addTodo () {
       this.todos.push({
         name: 'Jean',
-        completed: false
+        completed: false,
+        inProgress: false
       })
     }
   },

@@ -4,7 +4,7 @@
 
             <h1>Todos</h1>
             <span class="todo-count"><strong>{{ completed }}</strong> tâches faites</span>
-            <span class="todo-count"><strong>{{ inProgress }}</strong> tâches en cours</span>
+                <span class="todo-count"><strong>{{ inProgress }}</strong> tâches en cours</span>
             <input type="test" class="new-todo"  placeholder="Ajouter une tache" v-model="newTodo" @keyup.enter="addTodo">
 
         </header>
@@ -14,9 +14,9 @@
             <ul class="todo-list">
                 <li class="todo" v-for="(todo, index) in filteredTodos" :key="index" :class="{completed: todo.completed, editing: todo === editing}">
                     <div class="view">
-                        <input type="checkbox" v-model="todo.completed" class="toggle">
-                        <label @dblclick="editing(todo)" >{{ todo.name }}</label>
-                        <button class="destroy" @click.prevent="deletTodo(todo)"></button>
+                        <input type="checkbox" v-model="todo.completed" class="toggle" :disabled="verification(todo)">
+                        <label @dblclick="editTodo(todo)" >{{ todo.name }}</label>
+                        <button class="destroy" @click.prevent="deleteTodo(todo)"></button>
                         <p v-show="todo.inProgress">encour</p>
                     </div>
                     <input type="text" class="edit" v-model="todo.name" @keyup.enter="doneEdit" @blur="doneEdit" @keyup.esc="cancelEdit" v-focus="todo === editing">
@@ -65,7 +65,8 @@ export default {
     addTodo () {
       this.todos.push({
         completed: false,
-        name: this.newTodo
+        name: this.newTodo,
+        inProgress: false
       })
 
       this.newTodo = ''
@@ -93,6 +94,10 @@ export default {
     cancelEdit () {
       this.editing.name = this.oldTodo
       this.doneEdit()
+    },
+
+    verification (todo) {
+      return !todo.inProgress
     }
   },
 
@@ -104,6 +109,7 @@ export default {
       set (value) {
         this.todos.forEach(todo => {
           todo.completed = value
+          todo.verification = value
         })
       }
     },
@@ -131,14 +137,11 @@ export default {
       }
 
       return this.todos
-    }
-  },
+    },
 
-  inProgress () {
-    const pending = this.todos.filter(function (todo) {
-      return todo.inProgress
-    })
-    return pending.length
+    inProgress () {
+      return this.todos.filter(todo => todo.inProgress).length
+    }
   },
 
   directives: {
